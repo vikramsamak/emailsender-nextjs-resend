@@ -1,13 +1,15 @@
 "use client";
 
-import { use, useState } from "react";
+import { getBaseUrl } from "@/helpers/getBaseUrl";
+import { useState } from "react";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const baseUrl = getBaseUrl();
   const sendTestEmail = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/emailsender");
+      const res = await fetch(`${baseUrl}/api/emailsender`);
       const data = await res.json();
       if (data.sucess) {
         alert("Email sent sucsessfully");

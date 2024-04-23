@@ -4,4 +4,4 @@ export const PROD_ENV = "production";
 
 export const DEV_URL = "http://localhost:3000";
 
-export const PROD_URL=""
+export const PROD_URL = "https://cronjob-next.vercel.app/";
