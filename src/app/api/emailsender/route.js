@@ -4,12 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    await resend.emails.send({
+    const emailData = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: "vikramsamak02@gmail.com",
       subject: "Hello World",
       react: <Testemailtemplate />,
     });
+    console.log(`Email sucessfully sent. ID : ${emailData.data.id}.`);
     return NextResponse.json({ sucess: true });
   } catch (error) {
     console.log(error);
