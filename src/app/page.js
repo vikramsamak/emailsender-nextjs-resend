@@ -13,6 +13,7 @@ export default function Home() {
       const data = await res.json();
       if (data.sucess) {
         alert("Email sent sucsessfully");
+        console.log(data);
       }
     } catch (error) {
       console.error(error);
