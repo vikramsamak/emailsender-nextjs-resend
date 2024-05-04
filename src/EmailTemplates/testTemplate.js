@@ -9,7 +9,7 @@ export default function Testemailtemplate() {
     <TailwindWrapper>
       <Container className="flex flex-col justify-center items-center">
         <Text>This is system generated mail sent by cronjob-next app.</Text>
-        <Text>Current Hour: {currentTime}</Text>
+        <Text>Current Hour: {new Date(currentTime).toLocaleTimeString()}</Text>
         <Text>Current Env {process.env.NODE_ENV}</Text>
       </Container>
     </TailwindWrapper>
