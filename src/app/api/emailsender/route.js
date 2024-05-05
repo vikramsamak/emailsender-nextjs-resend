@@ -11,7 +11,7 @@ export async function GET() {
       react: <Testemailtemplate />,
     });
     console.log(`Email sucessfully sent. ID : ${emailData.data.id}.`);
-    return NextResponse.json({ sucess: true });
+    return NextResponse.json({ data: emailData });
   } catch (error) {
     console.log(error);
     return NextResponse.json({ error: error.message });
