@@ -11,10 +11,11 @@ export default function Home() {
       setLoading(true);
       const res = await fetch(`${baseUrl}/api/emailsender`);
       const data = await res.json();
-      console.log(data);
-      if (data.sucess) {
-        alert("Email sent sucsessfully");
-        console.log(data);
+      if (data.msg) {
+        alert(data.msg);
+      }
+      if (data.error) {
+        alert(data.error);
       }
     } catch (error) {
       console.error(error);
