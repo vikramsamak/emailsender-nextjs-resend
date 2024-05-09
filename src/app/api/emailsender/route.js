@@ -10,20 +10,23 @@ export async function GET() {
   const indianformattedTime = indianTime.format("hh mm ss a");
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: process.env.SENDER_EMAIL,
-      to: [process.env.RECEIVER_EMAIL],
-      subject: "Test",
-      text: `This is system generated mail sent by cronjob-next app. Current Time: ${indianformattedDate} - ${indianformattedTime}. Current Env ${process.env.NODE_ENV}`,
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: process.env.SENDER_EMAIL,
+        to: [process.env.RECEIVER_EMAIL],
+        subject: "TEST",
+        text: `This is system generated mail sent by cronjob-next app. Current Time: ${indianformattedDate} - ${indianformattedTime}. Current Env ${process.env.NODE_ENV}`,
+      }),
     });
 
-    if (data) {
-      console.log(data);
+    if (res.ok) {
       return NextResponse.json({ msg: "Email sent sucessfully." });
-    }
-
-    if (error) {
-      console.log(error);
+    } else {
       return NextResponse.json({ error: "Failed to send email." });
     }
   } catch (error) {
