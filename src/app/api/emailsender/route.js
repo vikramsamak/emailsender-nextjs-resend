@@ -1,17 +1,20 @@
-import { getIndianTime } from "@/helpers/getIndianTime";
 import { resend } from "@/libs/resend";
-import emailjs from "@emailjs/nodejs";
 import { NextResponse } from "next/server";
+import moment from "moment-timezone";
 
 export async function GET() {
+  const indianTime = moment().tz("Asia/Kolkata");
+
+  const indianformattedDate = indianTime.format("DD MM YYYY");
+
+  const indianformattedTime = indianTime.format("hh mm ss a");
+
   try {
     const { data, error } = await resend.emails.send({
-      from: "noreply@vikramsamak.com",
-      to: ["vikramsamak02@gmail.com"],
-      subject: "Hello world",
-      text: `This is system generated mail sent by cronjob-next app. Current Time: ${getIndianTime(
-        new Date()
-      )} Current Env ${process.env.NODE_ENV}`,
+      from: process.env.SENDER_EMAIL,
+      to: [process.env.RECEIVER_EMAIL],
+      subject: "Test",
+      text: `This is system generated mail sent by cronjob-next app. Current Time: ${indianformattedDate} - ${indianformattedTime}. Current Env ${process.env.NODE_ENV}`,
     });
 
     if (data) {
