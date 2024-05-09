@@ -18,10 +18,12 @@ export async function GET() {
     });
 
     if (data) {
+      console.log(data);
       return NextResponse.json({ msg: "Email sent sucessfully." });
     }
 
     if (error) {
+      console.log(error);
       return NextResponse.json({ error: "Failed to send email." });
     }
   } catch (error) {
