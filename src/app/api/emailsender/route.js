@@ -1,14 +1,18 @@
-import { resend } from "@/libs/resend";
 import { NextResponse } from "next/server";
 import moment from "moment-timezone";
 
-export async function GET() {
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+
+export async function POST(req) {
   const indianTime = moment().tz("Asia/Kolkata");
 
   const indianformattedDate = indianTime.format("DD MM YYYY");
 
   const indianformattedTime = indianTime.format("hh mm ss a");
 
+  const reqBody = await req.json();
+  const { to: emailto } = reqBody;
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -18,7 +22,7 @@ export async function GET() {
       },
       body: JSON.stringify({
         from: process.env.SENDER_EMAIL,
-        to: [process.env.RECEIVER_EMAIL],
+        to: emailto,
         subject: "TEST",
         text: `This is system generated mail sent by cronjob-next app. Current Time: ${indianformattedDate} - ${indianformattedTime}. Current Env ${process.env.NODE_ENV}`,
       }),

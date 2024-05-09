@@ -9,7 +9,13 @@ export default function Home() {
   const sendTestEmail = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${baseUrl}/api/emailsender`);
+      const res = await fetch(`${baseUrl}/api/emailsender`, {
+        method: "POST",
+        body: JSON.stringify({ to: "vikramsamak02@gmail.com" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await res.json();
       if (data.msg) {
         alert(data.msg);
