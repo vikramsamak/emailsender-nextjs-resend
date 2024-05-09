@@ -11,7 +11,7 @@ export default function Home() {
       setLoading(true);
       const res = await fetch(`${baseUrl}/api/emailsender`, {
         method: "POST",
-        body: JSON.stringify({ to: "vikramsamak02@gmail.com" }),
+        body: JSON.stringify({ to: process.env.RECEIVER_EMAIL }),
         headers: {
           "Content-Type": "application/json",
         },
