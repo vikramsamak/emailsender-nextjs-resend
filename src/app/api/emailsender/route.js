@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import {
   EMAIL_FAILED_RESPONSE,
   EMAIL_SUCCESS_RESPONSE,
-  RESEND_API_URL,
 } from "@/helpers/constants";
 
 export const runtime = "edge";
