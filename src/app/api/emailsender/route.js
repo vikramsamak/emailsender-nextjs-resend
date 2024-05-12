@@ -1,37 +1,46 @@
 import { NextResponse } from "next/server";
-import moment from "moment-timezone";
+
+import {
+  EMAIL_FAILED_RESPONSE,
+  EMAIL_SUCCESS_RESPONSE,
+} from "@/helpers/constants";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  const indianTime = moment().tz("Asia/Kolkata");
-
-  const indianformattedDate = indianTime.format("DD MM YYYY");
-
-  const indianformattedTime = indianTime.format("hh mm ss a");
-
   const reqBody = await req.json();
-  const { to: emailto } = reqBody;
+  const { emailTo, emailCc, emailBcc, emailSubject, emailText } = reqBody;
+
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    const emailbody = {
+      from: process.env.SENDER_EMAIL,
+      to: emailTo,
+      subject: emailSubject,
+      text: emailText,
+    };
+
+    if (emailBcc.trim() !== "") {
+      emailbody.bcc = emailBcc;
+    }
+
+    if (emailCc.trim() !== "") {
+      emailbody.cc = emailCc;
+    }
+
+    const res = await fetch(process.env.API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       },
-      body: JSON.stringify({
-        from: process.env.SENDER_EMAIL,
-        to: emailto,
-        subject: "TEST",
-        text: `This is system generated mail sent by cronjob-next app. Current Time: ${indianformattedDate} - ${indianformattedTime}. Current Env ${process.env.NODE_ENV}`,
-      }),
+      body: JSON.stringify(emailbody),
     });
 
     if (res.ok) {
-      return NextResponse.json({ msg: "Email sent sucessfully." });
+      return NextResponse.json({ msg: EMAIL_SUCCESS_RESPONSE });
     } else {
-      return NextResponse.json({ error: "Failed to send email." });
+      return NextResponse.json({ error: EMAIL_FAILED_RESPONSE });
     }
   } catch (error) {
     console.log(error);

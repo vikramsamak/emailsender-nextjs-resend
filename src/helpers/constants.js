@@ -1,7 +1,3 @@
-export const DEV_ENV = "development";
+export const EMAIL_SUCCESS_RESPONSE = "Email sent sucessfully.";
 
-export const PROD_ENV = "production";
-
-export const DEV_URL = "http://localhost:3000";
-
-export const PROD_URL = "https://cronjob-next.vercel.app";
+export const EMAIL_FAILED_RESPONSE = "Failed to send email.";
