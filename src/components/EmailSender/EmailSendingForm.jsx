@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { nullable, z } from "zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,18 +14,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
+import axios from "axios";
+import { useState } from "react";
+import {
+  EMAIL_FAILED_RESPONSE,
+  EMAIL_SUCCESS_RESPONSE,
+} from "@/helpers/constants";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   emailTo: z.string().email({ message: "Invalid email format" }),
   emailCc: z
     .string()
-    .refine((value) => value === "" || z.string().email().check(value), {
+    .refine((value) => value === "" || z.string()?.email()?.check(value), {
       message: "Invalid email format",
     })
     .optional(),
   emailBcc: z
     .string()
-    .refine((value) => value === "" || z.string().email().check(value), {
+    .refine((value) => value === "" || z.string()?.email()?.check(value), {
       message: "Invalid email format",
     })
     .optional(),
@@ -34,6 +41,8 @@ const formSchema = z.object({
 });
 
 function EmailSendingForm() {
+  const [isLoading, setLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,8 +54,26 @@ function EmailSendingForm() {
     },
   });
 
+  const sendEmailData = async (emailData) => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/emailsender", emailData);
+      if (res.data.msg === EMAIL_SUCCESS_RESPONSE) {
+        toast.success(EMAIL_SUCCESS_RESPONSE);
+      }
+      if (res.data.error === EMAIL_FAILED_RESPONSE) {
+        toast.error(EMAIL_FAILED_RESPONSE);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+      form.reset();
+    }
+  };
+
   function onSubmit(values) {
-    console.log(values);
+    sendEmailData(values);
   }
 
   return (
@@ -127,7 +154,7 @@ function EmailSendingForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Send</Button>
+        <Button type="submit">{isLoading ? "Sending..." : "Send"} </Button>
       </form>
     </Form>
   );
