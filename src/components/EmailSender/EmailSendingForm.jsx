@@ -88,7 +88,9 @@ function EmailSendingForm() {
             name="emailTo"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>To</FormLabel>
+                <FormLabel className="font-mono uppercase tracking-wide">
+                  To
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Email" {...field} />
                 </FormControl>
@@ -101,7 +103,9 @@ function EmailSendingForm() {
             name="emailCc"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Cc</FormLabel>
+                <FormLabel className="font-mono uppercase tracking-wide">
+                  Cc
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Cc" {...field} />
                 </FormControl>
@@ -114,7 +118,9 @@ function EmailSendingForm() {
             name="emailBcc"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Bcc</FormLabel>
+                <FormLabel className="font-mono uppercase tracking-wide">
+                  Bcc
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Bcc" {...field} />
                 </FormControl>
@@ -128,7 +134,9 @@ function EmailSendingForm() {
           name="emailSubject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject</FormLabel>
+              <FormLabel className="font-mono uppercase tracking-wide">
+                Subject
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Subject" {...field} />
               </FormControl>
@@ -141,7 +149,9 @@ function EmailSendingForm() {
           name="emailText"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel className="font-mono uppercase tracking-wide">
+                Message
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className="overflow-y-auto"
@@ -154,7 +164,9 @@ function EmailSendingForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">{isLoading ? "Sending..." : "Send"} </Button>
+        <Button type="submit" className="font-mono uppercase tracking-wide">
+          {isLoading ? "Sending..." : "Send"}{" "}
+        </Button>
       </form>
     </Form>
   );
