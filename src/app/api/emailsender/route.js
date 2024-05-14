@@ -9,8 +9,19 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
-  const reqBody = await req.json();
-  const { emailTo, emailCc, emailBcc, emailSubject, emailText } = reqBody;
+  const reqBody = await req.formData();
+
+  const emailTo = reqBody.get("emailTo");
+
+  const emailCc = reqBody.get("emailCc");
+
+  const emailBcc = reqBody.get("emailBcc");
+
+  const emailSubject = reqBody.get("emailSubject");
+
+  const emailText = reqBody.get("emailText");
+
+  const emailAttachments = reqBody.getAll("emailAttachments");
 
   try {
     const emailbody = {
@@ -28,6 +39,17 @@ export async function POST(req) {
       emailbody.cc = emailCc;
     }
 
+    const attachments = [];
+
+    if (emailAttachments) {
+      for (const attachment of emailAttachments) {
+        const { name } = attachment;
+        const content = await attachment.arrayBuffer();
+        attachments.push({ name, content });
+      }
+      emailbody.attachments = attachments;
+    }
+
     const res = await fetch(process.env.API_URL, {
       method: "POST",
       headers: {
@@ -40,6 +62,7 @@ export async function POST(req) {
     if (res.ok) {
       return NextResponse.json({ msg: EMAIL_SUCCESS_RESPONSE });
     } else {
+      console.log(res);
       return NextResponse.json({ error: EMAIL_FAILED_RESPONSE });
     }
   } catch (error) {
