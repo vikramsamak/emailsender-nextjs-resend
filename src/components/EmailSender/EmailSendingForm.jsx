@@ -16,8 +16,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import {
+  DEV_BASE_URL,
   EMAIL_FAILED_RESPONSE,
   EMAIL_SUCCESS_RESPONSE,
+  PROD_BASE_URL,
 } from "@/helpers/constants";
 import { toast } from "sonner";
 
@@ -60,7 +62,9 @@ function EmailSendingForm() {
   const sendEmailData = async (emailData) => {
     try {
       setLoading(true);
-      const resopnse = await fetch("/api/emailsender", {
+      const baseUrl =
+        process.env.NODE_ENV === "development" ? DEV_BASE_URL : PROD_BASE_URL;
+      const resopnse = await fetch(`${baseUrl}/api/emailsender`, {
         method: "POST",
         body: emailData,
       });
