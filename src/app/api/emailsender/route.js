@@ -4,6 +4,8 @@ import {
   BASE64_ENCODING,
   EMAIL_FAILED_RESPONSE,
   EMAIL_SUCCESS_RESPONSE,
+  RESEND_API_URL,
+  SENDER_EMAIL,
 } from "@/helpers/constants";
 import { arrayBufferToBase64 } from "@/helpers/helperFunctions";
 
@@ -21,7 +23,7 @@ export async function POST(req) {
   const emailAttachments = reqBody.getAll("emailAttachments");
 
   const emailbody = {
-    from: process.env.SENDER_EMAIL,
+    from: SENDER_EMAIL,
     to: emailTo,
     subject: emailSubject,
     text: emailText,
@@ -53,7 +55,7 @@ export async function POST(req) {
   }
 
   try {
-    const res = await fetch(process.env.API_URL, {
+    const res = await fetch(RESEND_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
