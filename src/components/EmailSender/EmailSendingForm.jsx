@@ -19,6 +19,8 @@ import {
   DEV_BASE_URL,
   EMAIL_FAILED_RESPONSE,
   EMAIL_SUCCESS_RESPONSE,
+  MAX_ATTACHMENT_SIZE_BYTES,
+  MAX_ATTACHMENT_SIZE_MB,
   PROD_BASE_URL,
 } from "@/helpers/constants";
 import { toast } from "sonner";
@@ -39,7 +41,22 @@ const formSchema = z.object({
     .optional(),
   emailSubject: z.string().min(1, { message: "Subject is required" }),
   emailText: z.string().min(1, { message: "Message is required" }),
-  emailAttachments: z.any().optional(),
+  emailAttachments: z
+    .any()
+    .optional()
+    .refine(
+      (attachments) => {
+        if (attachments) {
+          const files = Array.from(attachments);
+          const totalSize = files.reduce((acc, file) => acc + file.size, 0);
+          return totalSize <= MAX_ATTACHMENT_SIZE_BYTES;
+        }
+        return true;
+      },
+      {
+        message: `Total attachments size must not exceed ${MAX_ATTACHMENT_SIZE_MB} MB`,
+      }
+    ),
 });
 
 function EmailSendingForm() {
@@ -47,6 +64,8 @@ function EmailSendingForm() {
 
   const form = useForm({
     resolver: zodResolver(formSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       emailTo: "",
       emailCc: "",
